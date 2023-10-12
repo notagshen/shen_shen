@@ -1,12 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>嵌入Excel文件</title>
-</head>
-<body>
-    <h1>我的 Excel 文件</h1>
-    <p>下面是一个嵌入的 Excel 文件：</p>
-    <iframe src="https://github.com/notagshen/shen_shen/raw/main/kline_summary.xlsx" width="1920" height="1080"></iframe>
-</body>
-</html>
+<script>
+  document.getElementById('xlsxFile').addEventListener('change', handleFile);
 
+  function handleFile(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const html = XLSX.utils.sheet_to_html(worksheet, { editable: true });
+        document.getElementById('xlsxContent').innerHTML = html;
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  }
+</script>
