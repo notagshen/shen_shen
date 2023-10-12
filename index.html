@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title></title>
-  <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"> </script>
-  <script src="excelReview.js"></script>
+  <title>PDF.js Example</title>
+  <script src="pdf.js"></script>
 </head>
-<style>
-  table {
-    border: 1px solid green;
-    border-collapse: collapse;
-  }
- 
-  td {
-    border: 1px solid green;
-  }
-</style>
- 
 <body>
-  <input type="file" onchange="importf(this)" />
-  <br>
-  <br>
-  <br>
-  <div id="demo"></div>
- 
+  <canvas id="pdfCanvas"></canvas>
+
+  <script>
+    // 引入PDF.js库
+    PDFJS.workerSrc = 'pdf.worker.js';
+
+    // 加载PDF文件
+    PDFJS.getDocument('file.pdf').then(function(pdf) {
+      // 获取第一页
+      pdf.getPage(1).then(function(page) {
+        var canvas = document.getElementById('pdfCanvas');
+        var context = canvas.getContext('2d');
+        var viewport = page.getViewport(1.0);
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        // 渲染页面到canvas
+        page.render({
+          canvasContext: context,
+          viewport: viewport
+        });
+      });
+    });
+  </script>
 </body>
- 
 </html>
